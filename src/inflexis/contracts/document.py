@@ -15,9 +15,9 @@ A chunk that cannot answer all four is not retrievable. This is enforced in
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
-from typing import Sequence
+from datetime import UTC, date, datetime
 
 from .classification import (
     AuthorityLevel,
@@ -150,7 +150,7 @@ class Chunk:
     def from_document(
         cls, document: Document, chunk_id: str, text: str, ordinal: int = 0,
         provenance: Provenance | None = None,
-    ) -> "Chunk":
+    ) -> Chunk:
         """Derive a chunk that cannot accidentally out-scope its document."""
         return cls(
             chunk_id=chunk_id,
@@ -199,7 +199,7 @@ class Chunk:
 
     def is_current(self, as_of: date | None = None) -> bool:
         """Freshness check used by corrective RAG."""
-        as_of = as_of or datetime.now(timezone.utc).date()
+        as_of = as_of or datetime.now(UTC).date()
         if self.status is not DocumentStatus.ACTIVE:
             return False
         if self.effective_date and as_of < self.effective_date:

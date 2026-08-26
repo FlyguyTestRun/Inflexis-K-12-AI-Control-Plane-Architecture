@@ -12,8 +12,8 @@ orchestrator should take: rewrite, broaden, clarify, escalate, or refuse.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import date
-from typing import Sequence
 
 from ..contracts.classification import (
     DEFAULT_AUTHORITATIVE_THRESHOLD,

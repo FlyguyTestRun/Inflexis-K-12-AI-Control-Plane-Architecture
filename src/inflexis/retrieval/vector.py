@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import math
-from typing import Sequence
+from collections.abc import Sequence
 
 from ..contracts.authz import AuthorizedQuery
 from ..contracts.document import Chunk, ScoredChunk
@@ -44,7 +44,10 @@ class HashingEmbeddingProvider:
     def _embed_one(self, text: str) -> list[float]:
         vec = [0.0] * self._dimensions
         for token in tokenize(text):
-            digest = hashlib.md5(token.encode("utf-8")).digest()
+            # blake2b, not md5: this is feature hashing rather than a
+            # security primitive, but shipping md5 in a K-12 security
+            # product invites a finding in every scan the district runs.
+            digest = hashlib.blake2b(token.encode("utf-8"), digest_size=8).digest()
             idx = int.from_bytes(digest[:4], "big") % self._dimensions
             sign = 1.0 if digest[4] % 2 == 0 else -1.0
             vec[idx] += sign
@@ -53,7 +56,18 @@ class HashingEmbeddingProvider:
 
 
 def cosine(a: Sequence[float], b: Sequence[float]) -> float:
-    return sum(x * y for x, y in zip(a, b))
+    """Cosine similarity of two unit vectors.
+
+    ``strict=True`` is deliberate: a dimension mismatch means the query and the
+    corpus were embedded by different models or model versions, which produces
+    silently meaningless similarities rather than an obvious failure.
+    """
+    if len(a) != len(b):
+        raise ValueError(
+            f"embedding dimension mismatch: {len(a)} vs {len(b)}; the index and "
+            "the query were embedded with different models or versions"
+        )
+    return sum(x * y for x, y in zip(a, b, strict=True))
 
 
 class VectorRetriever:

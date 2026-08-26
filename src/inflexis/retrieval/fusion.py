@@ -15,7 +15,7 @@ only one. Agreement between retrievers is the signal RRF rewards.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from ..contracts.document import ScoredChunk
 from ..contracts.retrieval import RetrievalResult

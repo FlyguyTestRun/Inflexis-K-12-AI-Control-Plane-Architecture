@@ -8,13 +8,13 @@ roles (see ``docs/security/trust-boundaries.md``).
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from types import MappingProxyType
-from typing import Mapping
 
 
-class Role(str, Enum):
+class Role(StrEnum):
     """Platform roles.
 
     Districts map their own identity-provider groups onto these roles through
@@ -36,7 +36,7 @@ class Role(str, Enum):
     SERVICE = "service"
 
 
-class Permission(str, Enum):
+class Permission(StrEnum):
     """Fine-grained entitlements, checked in addition to roles.
 
     Roles answer "who is this person"; permissions answer "what has this person

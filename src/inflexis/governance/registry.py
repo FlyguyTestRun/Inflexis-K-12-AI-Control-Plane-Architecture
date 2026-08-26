@@ -10,8 +10,8 @@ spreadsheet drifts; a gate cannot.
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator
 from datetime import date
-from typing import Iterable, Iterator
 
 from ..contracts.governance import (
     AISystemRecord,

@@ -8,19 +8,20 @@ or application code (ADR-005).
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Protocol, Sequence
+from enum import StrEnum
+from typing import Protocol
 
 
-class ModelKind(str, Enum):
+class ModelKind(StrEnum):
     LLM = "llm"
     VLM = "vlm"
     EMBEDDING = "embedding"
     RERANKER = "reranker"
 
 
-class Lifecycle(str, Enum):
+class Lifecycle(StrEnum):
     """Vendor API lifecycle stage. Drives ADR-006 preview isolation."""
 
     GA = "ga"

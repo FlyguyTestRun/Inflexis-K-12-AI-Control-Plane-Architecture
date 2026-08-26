@@ -16,8 +16,8 @@ from __future__ import annotations
 
 import math
 from collections import Counter
+from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
-from typing import Iterable, Iterator, Mapping
 
 from ..contracts.authz import RetrievalFilter
 from ..contracts.document import Chunk
@@ -52,7 +52,7 @@ class InMemoryIndex:
         """Ingestion/administration only. Never call from a retrieval path."""
         yield from self._by_tenant.get(tenant_id, ())
 
-    def statistics(self, tenant_id: str) -> "CorpusStatistics":
+    def statistics(self, tenant_id: str) -> CorpusStatistics:
         """Term statistics for one tenant, used for relevance weighting."""
         from .bm25 import tokenize
 

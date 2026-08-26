@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date
-from enum import Enum
+from enum import StrEnum
 from typing import Protocol
 
 from .classification import AuthorityLevel, DocumentStatus, TrustDomain
@@ -28,7 +28,7 @@ from .identity import Principal
 _GRANT = object()
 
 
-class Effect(str, Enum):
+class Effect(StrEnum):
     ALLOW = "allow"
     DENY = "deny"
 

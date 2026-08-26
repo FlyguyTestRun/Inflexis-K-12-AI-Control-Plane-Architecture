@@ -6,15 +6,16 @@ set and the metric surface described in ``docs/evaluation/evaluation-framework.m
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Protocol, Sequence
+from enum import StrEnum
+from typing import Protocol
 
 from .classification import AuthorityLevel
 from .identity import Role
 
 
-class ExpectedBehaviour(str, Enum):
+class ExpectedBehaviour(StrEnum):
     """What a correct system does with this case."""
 
     ANSWER = "answer"

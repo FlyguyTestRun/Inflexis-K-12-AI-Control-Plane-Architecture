@@ -15,7 +15,7 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
-from typing import Iterable, Sequence
+from collections.abc import Sequence
 
 from ..contracts.authz import AuthorizedQuery
 from ..contracts.document import Chunk, ScoredChunk
@@ -81,7 +81,7 @@ class BM25Retriever:
 
         q_terms = tokenize(query_text)
         scores: list[tuple[Chunk, float]] = []
-        for chunk, doc, dl in zip(corpus, docs, lengths):
+        for chunk, doc, dl in zip(corpus, docs, lengths, strict=True):
             tf = Counter(doc)
             score = 0.0
             for term in q_terms:

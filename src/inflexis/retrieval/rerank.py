@@ -16,8 +16,8 @@ Two implementations ship:
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from datetime import date
-from typing import Sequence
 
 from ..contracts.document import ScoredChunk
 from ..contracts.model import RerankerProvider
@@ -86,7 +86,7 @@ class HeuristicReranker:
     def __init__(
         self, *, coverage_weight: float = 1.0, authority_weight: float = 0.35,
         freshness_weight: float = 0.15,
-        statistics: "CorpusStatistics | None" = None,
+        statistics: CorpusStatistics | None = None,
     ) -> None:
         self.coverage_weight = coverage_weight
         self.authority_weight = authority_weight

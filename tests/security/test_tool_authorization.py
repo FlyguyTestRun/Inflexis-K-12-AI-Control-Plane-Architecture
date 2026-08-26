@@ -10,10 +10,10 @@ from inflexis.contracts.identity import Permission, Role
 from inflexis.contracts.tools import RiskLevel, ToolDescriptor, ToolResult
 from inflexis.tools import ToolAuthorizationError, ToolRegistry
 from inflexis.tools.catalog import (
+    CREATE_TICKET,
     IT_KNOWLEDGE_SEARCH,
     POLICY_SEARCH,
     SEND_EMAIL,
-    CREATE_TICKET,
 )
 
 

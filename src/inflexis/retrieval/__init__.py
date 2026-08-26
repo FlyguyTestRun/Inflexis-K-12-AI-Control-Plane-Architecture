@@ -5,11 +5,11 @@ K-12 district knowledge; see ADR-002 for why.
 """
 
 from .bm25 import BM25Retriever
-from .vector import VectorRetriever
-from .fusion import ReciprocalRankFusion
-from .rerank import HeuristicReranker, ProviderReranker
 from .corrective import CorrectiveChecker
+from .fusion import ReciprocalRankFusion
 from .pipeline import HybridRetrievalPipeline
+from .rerank import HeuristicReranker, ProviderReranker
+from .vector import VectorRetriever
 
 __all__ = [
     "BM25Retriever",

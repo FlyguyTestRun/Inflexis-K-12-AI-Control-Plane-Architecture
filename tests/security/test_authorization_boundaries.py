@@ -7,8 +7,8 @@ isolation -- it is deployment luck.
 """
 
 import pytest
-
 from conftest import retrieve_text
+
 from inflexis.contracts.classification import TrustDomain
 
 

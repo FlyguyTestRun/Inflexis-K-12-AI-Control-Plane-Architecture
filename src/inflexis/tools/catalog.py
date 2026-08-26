@@ -68,7 +68,10 @@ APPROVED_WEB_SEARCH = ToolDescriptor(
 
 SQL_ANALYTICS = ToolDescriptor(
     name="sql_analytics",
-    description="Run allow-listed, parameterised aggregate queries against the reporting warehouse.",
+    description=(
+        "Run allow-listed, parameterised aggregate queries against the "
+        "reporting warehouse."
+    ),
     risk_level=RiskLevel.MEDIUM,
     read_only=True,
     required_roles=frozenset({Role.PRINCIPAL, Role.SUPERINTENDENT, Role.IT_ADMIN}),

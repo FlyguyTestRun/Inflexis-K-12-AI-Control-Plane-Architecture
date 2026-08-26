@@ -13,9 +13,9 @@ retrieval half can be tested, evaluated, and audited without a model endpoint.
 from __future__ import annotations
 
 import time
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Callable, Sequence
 
 from ..contracts.audit import AuditEvent, AuditEventType, AuditSink, Severity
 from ..contracts.authz import AuthorizedQuery, enforce_filter

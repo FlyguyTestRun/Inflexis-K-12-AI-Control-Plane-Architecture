@@ -10,7 +10,7 @@ see; model approval governs where that content may be sent.
 
 from __future__ import annotations
 
-from typing import Iterable, Iterator
+from collections.abc import Iterable, Iterator
 
 from ..contracts.classification import TrustDomain
 from ..contracts.model import Lifecycle, ModelDescriptor, ModelKind

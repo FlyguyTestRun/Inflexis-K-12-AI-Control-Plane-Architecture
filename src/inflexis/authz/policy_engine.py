@@ -21,9 +21,9 @@ Design notes
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Mapping
 
 from ..contracts import authz as _authz
 from ..contracts.authz import (

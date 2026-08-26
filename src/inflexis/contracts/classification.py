@@ -14,10 +14,10 @@ handling requirements.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import Enum, StrEnum
 
 
-class TrustDomain(str, Enum):
+class TrustDomain(StrEnum):
     """Index partitions. Content never crosses a partition implicitly.
 
     The letters match the taxonomy in ``docs/security/trust-boundaries.md``.
@@ -45,7 +45,7 @@ RESTRICTED_BY_DEFAULT: frozenset[TrustDomain] = frozenset(
 )
 
 
-class DataClassification(str, Enum):
+class DataClassification(StrEnum):
     """Handling sensitivity, independent of storage location."""
 
     PUBLIC = "public"
@@ -89,7 +89,7 @@ class AuthorityLevel(int, Enum):
 DEFAULT_AUTHORITATIVE_THRESHOLD = AuthorityLevel.DISTRICT_HANDBOOK
 
 
-class DocumentStatus(str, Enum):
+class DocumentStatus(StrEnum):
     """Lifecycle state. Only ACTIVE content is retrievable by default."""
 
     DRAFT = "draft"

@@ -10,8 +10,8 @@ the model to police its own access.
 """
 
 import pytest
-
 from conftest import retrieve_text
+
 from inflexis.contracts.classification import TrustDomain
 
 INJECTION_ATTEMPTS = [

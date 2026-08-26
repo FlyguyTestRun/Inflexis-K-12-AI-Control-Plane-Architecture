@@ -11,7 +11,7 @@ Two rules make this component worth having:
 
 from __future__ import annotations
 
-from typing import Iterable, Mapping
+from collections.abc import Iterable, Mapping
 
 from ..contracts.audit import AuditEvent, AuditEventType, AuditSink, Severity
 from ..contracts.authz import Effect, PolicyDecision

@@ -7,12 +7,11 @@ validation, and cost/audit accounting.
 
 from __future__ import annotations
 
-from typing import Mapping, Sequence
+from collections.abc import Mapping, Sequence
 
-from ..contracts.audit import AuditEvent, AuditEventType, AuditSink, Severity
-from ..contracts.classification import TrustDomain
-from ..contracts.model import Completion, ModelKind, ModelProvider
+from ..contracts.audit import AuditEvent, AuditEventType, AuditSink
 from ..contracts.document import ScoredChunk
+from ..contracts.model import Completion, ModelKind, ModelProvider
 from .registry import ModelRegistry
 
 #: Wrapper for retrieved content. Everything inside is data the model may cite

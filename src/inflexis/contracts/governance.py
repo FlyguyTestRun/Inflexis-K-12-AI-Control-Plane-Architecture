@@ -9,10 +9,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date
-from enum import Enum
+from enum import StrEnum
 
 
-class RiskClass(str, Enum):
+class RiskClass(StrEnum):
     MINIMAL = "minimal"
     LIMITED = "limited"
     ELEVATED = "elevated"
@@ -20,7 +20,7 @@ class RiskClass(str, Enum):
     PROHIBITED = "prohibited"
 
 
-class ApprovalStatus(str, Enum):
+class ApprovalStatus(StrEnum):
     DRAFT = "draft"
     SUBMITTED = "submitted"
     UNDER_REVIEW = "under_review"
@@ -30,7 +30,7 @@ class ApprovalStatus(str, Enum):
     RETIRED = "retired"
 
 
-class DeploymentStatus(str, Enum):
+class DeploymentStatus(StrEnum):
     NOT_DEPLOYED = "not_deployed"
     SANDBOX = "sandbox"
     PILOT = "pilot"
@@ -38,7 +38,7 @@ class DeploymentStatus(str, Enum):
     DECOMMISSIONED = "decommissioned"
 
 
-class Applicability(str, Enum):
+class Applicability(StrEnum):
     """Whether a requirement applies -- never asserted, always reviewed.
 
     The platform ships defaults and citations. A district's counsel sets the

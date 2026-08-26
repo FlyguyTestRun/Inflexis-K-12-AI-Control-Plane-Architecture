@@ -10,15 +10,16 @@ which cannot exist without a prior policy decision. That is the whole point.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Protocol, Sequence
+from enum import StrEnum
+from typing import Protocol
 
 from .authz import AuthorizedQuery
 from .document import Chunk, ScoredChunk
 
 
-class RetrievalStrategy(str, Enum):
+class RetrievalStrategy(StrEnum):
     HYBRID = "hybrid"
     LEXICAL = "lexical"
     VECTOR = "vector"
@@ -27,7 +28,7 @@ class RetrievalStrategy(str, Enum):
     MULTIMODAL = "multimodal"
 
 
-class Sufficiency(str, Enum):
+class Sufficiency(StrEnum):
     """The corrective-RAG verdict on a candidate evidence set."""
 
     SUFFICIENT = "sufficient"
@@ -43,7 +44,7 @@ class Sufficiency(str, Enum):
         return self is Sufficiency.SUFFICIENT
 
 
-class CorrectiveAction(str, Enum):
+class CorrectiveAction(StrEnum):
     GENERATE = "generate"
     REWRITE_QUERY = "rewrite_query"
     BROADEN_SOURCES = "broaden_sources"
@@ -68,7 +69,7 @@ class RetrievalResult:
     def chunks(self) -> list[Chunk]:
         return [r.chunk for r in self.results]
 
-    def top(self, n: int) -> "RetrievalResult":
+    def top(self, n: int) -> RetrievalResult:
         return RetrievalResult(
             results=self.results[:n],
             strategy=self.strategy,

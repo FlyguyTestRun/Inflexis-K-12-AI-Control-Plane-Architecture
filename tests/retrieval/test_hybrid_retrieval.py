@@ -74,10 +74,9 @@ class TestFusion:
 
     def test_rrf_ignores_raw_score_magnitude(self):
         """The property that makes RRF correct: only ranks matter."""
+        from inflexis.contracts.document import Chunk, ScoredChunk
         from inflexis.contracts.retrieval import RetrievalResult, RetrievalStrategy
-        from inflexis.contracts.document import ScoredChunk
         from inflexis.fixtures.acme_isd import acme_documents
-        from inflexis.contracts.document import Chunk
 
         docs = acme_documents()[:2]
         chunks = [

@@ -9,13 +9,14 @@ counsel asks how an answer was produced.
 from __future__ import annotations
 
 import uuid
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Mapping, Protocol, Sequence
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any, Protocol
 
 
-class AuditEventType(str, Enum):
+class AuditEventType(StrEnum):
     AUTHZ_DECISION = "authz.decision"
     RETRIEVAL = "retrieval"
     FILTER_VIOLATION = "retrieval.filter_violation"
@@ -30,7 +31,7 @@ class AuditEventType(str, Enum):
     INCIDENT = "incident"
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     INFO = "info"
     NOTICE = "notice"
     WARNING = "warning"
@@ -54,7 +55,7 @@ class AuditEvent:
     outcome: str
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     timestamp: datetime = field(
-        default_factory=lambda: datetime.now(timezone.utc)
+        default_factory=lambda: datetime.now(UTC)
     )
     severity: Severity = Severity.INFO
     ai_system_id: str | None = None

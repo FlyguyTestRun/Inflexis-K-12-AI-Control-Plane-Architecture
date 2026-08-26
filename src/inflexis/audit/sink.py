@@ -8,7 +8,7 @@ develop habits the production sink will not tolerate.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from ..contracts.audit import AuditEvent, AuditEventType, Severity
 

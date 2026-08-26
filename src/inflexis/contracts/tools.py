@@ -7,14 +7,15 @@ handed a capability whose blast radius nobody wrote down.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Callable, Mapping, Protocol
+from enum import StrEnum
+from typing import Any, Protocol
 
 from .identity import Permission, Principal, Role
 
 
-class RiskLevel(str, Enum):
+class RiskLevel(StrEnum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
