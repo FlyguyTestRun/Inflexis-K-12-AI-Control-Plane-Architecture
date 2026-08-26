@@ -1,0 +1,76 @@
+{
+  "name": "Prohibited-use and disclosure policy control registry",
+  "version": "2026-08-26",
+  "disclaimer": "Categories below are engineering screening categories derived from reported TRAIGA prohibited-use topics. They are screening prompts for a human reviewer, not legal determinations. A registration blocked by one of these controls is escalated to the district AI Risk Officer and counsel, not silently refused.",
+  "controls": [
+    {
+      "control_id": "PU-MANIPULATION",
+      "category": "harmful behavioural manipulation",
+      "screening_question": "Does this use case aim to influence a person toward self-harm, harm to others, or criminal activity?",
+      "on_match": "block_registration",
+      "risk_class": "prohibited",
+      "escalate_to": ["ai_risk_officer", "legal"]
+    },
+    {
+      "control_id": "PU-INCITEMENT",
+      "category": "incitement",
+      "screening_question": "Does this use case generate content intended to incite violence or unlawful action?",
+      "on_match": "block_registration",
+      "risk_class": "prohibited",
+      "escalate_to": ["ai_risk_officer", "legal"]
+    },
+    {
+      "control_id": "PU-SOCIAL-SCORING",
+      "category": "governmental social scoring",
+      "screening_question": "Does this use case assign a person a score or rating used to determine access to services, benefits, or opportunities based on aggregated behaviour?",
+      "on_match": "block_registration",
+      "risk_class": "prohibited",
+      "escalate_to": ["ai_risk_officer", "legal", "superintendent"],
+      "notes": "Watch for well-intentioned district variants: composite 'student risk scores' assembled from attendance, discipline, and behaviour data can fall squarely in this category."
+    },
+    {
+      "control_id": "PU-BIOMETRIC",
+      "category": "biometric identification without consent",
+      "screening_question": "Does this use case capture, derive, or match biometric identifiers (face, voice, gait, fingerprint) without consent?",
+      "on_match": "block_registration",
+      "risk_class": "prohibited",
+      "escalate_to": ["ai_risk_officer", "legal"],
+      "notes": "Campus safety and visitor-management vendors frequently include this capability by default. Screening applies to procured systems, not only to systems the district builds."
+    },
+    {
+      "control_id": "PU-CONSTITUTIONAL",
+      "category": "infringement of constitutional rights",
+      "screening_question": "Could this use case restrict speech, association, religious exercise, or due process?",
+      "on_match": "escalate",
+      "risk_class": "heightened_scrutiny",
+      "escalate_to": ["legal"]
+    },
+    {
+      "control_id": "PU-DISCRIMINATION",
+      "category": "unlawful discrimination",
+      "screening_question": "Could this use case produce disparate outcomes across a protected class?",
+      "on_match": "escalate",
+      "risk_class": "heightened_scrutiny",
+      "escalate_to": ["ai_risk_officer", "legal"],
+      "required_evidence": "Bias evaluation results disaggregated by affected group, plus documented human review of consequential outputs."
+    },
+    {
+      "control_id": "PU-CSAM-SEXUAL-EXPLOITATION",
+      "category": "covered sexual exploitation and CSAM",
+      "screening_question": "Could this use case produce or process sexually explicit material involving minors, or non-consensual explicit depictions?",
+      "on_match": "block_registration",
+      "risk_class": "prohibited",
+      "escalate_to": ["ai_risk_officer", "legal", "law_enforcement_liaison"],
+      "notes": "Also implemented as an output-validation control, not only a registration screen, because a general-purpose assistant can be steered toward this regardless of registered purpose."
+    },
+    {
+      "control_id": "DISC-AI-INTERACTION",
+      "category": "AI interaction disclosure",
+      "screening_question": "Will a student, parent, or member of the public interact with this system?",
+      "on_match": "require_disclosure",
+      "risk_class": "limited",
+      "escalate_to": [],
+      "required_evidence": "Configured disclosure string and a transcript or screenshot showing it presented before interaction."
+    }
+  ]
+}

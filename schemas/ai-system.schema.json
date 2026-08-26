@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/ai-system.schema.json",
+  "title": "AI system registry record",
+  "description": "One entry in the district AI inventory. An AI system absent from this inventory cannot serve production traffic.",
+  "type": "object",
+  "required": ["ai_system_id", "tenant_id", "name", "purpose", "use_case", "owner", "business_owner", "technical_owner", "risk_class", "approval_status", "deployment_status"],
+  "properties": {
+    "ai_system_id": {"type": "string", "minLength": 1},
+    "tenant_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string"},
+    "purpose": {"type": "string", "minLength": 1},
+    "use_case": {"type": "string"},
+    "owner": {"type": "string"},
+    "business_owner": {"type": "string"},
+    "technical_owner": {"type": "string"},
+    "affected_users": {"type": "array", "items": {"type": "string"}},
+    "affected_population": {"type": "string"},
+    "data_categories": {"type": "array", "items": {"type": "string"}},
+    "models": {"type": "array", "items": {"type": "string"}},
+    "vendors": {"type": "array", "items": {"type": "string"}},
+    "tools": {"type": "array", "items": {"type": "string"}},
+    "risk_class": {"enum": ["minimal", "limited", "elevated", "heightened_scrutiny", "prohibited"]},
+    "heightened_scrutiny": {"type": "boolean"},
+    "human_oversight": {"type": "string"},
+    "approval_status": {"enum": ["draft", "submitted", "under_review", "approved", "rejected", "suspended", "retired"]},
+    "deployment_status": {"enum": ["not_deployed", "sandbox", "pilot", "production", "decommissioned"]},
+    "evaluation_status": {"type": "string"},
+    "policy_version": {"type": "string"},
+    "last_reviewed": {"type": ["string", "null"], "format": "date"},
+    "next_review": {"type": ["string", "null"], "format": "date"},
+    "rejection_reason": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"heightened_scrutiny": {"const": true}}, "required": ["heightened_scrutiny"]},
+      "then": {"required": ["human_oversight"], "properties": {"human_oversight": {"minLength": 1}}}
+    },
+    {
+      "if": {"properties": {"risk_class": {"const": "prohibited"}}, "required": ["risk_class"]},
+      "then": {"properties": {"deployment_status": {"enum": ["not_deployed", "decommissioned"]}}}
+    }
+  ]
+}

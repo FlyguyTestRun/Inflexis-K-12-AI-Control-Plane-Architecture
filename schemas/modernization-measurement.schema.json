@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/modernization-measurement.schema.json",
+  "title": "Modernization measurement",
+  "description": "Before/after measurement for an AI-assisted process. This is a product capability that lets a district demonstrate 'AI improved this process', not a compliance control -- see TX-HB2818-MODERNIZATION in the Texas applicability matrix.",
+  "type": "object",
+  "required": ["tenant_id", "project_id", "legacy_process", "baseline_minutes", "baseline_cost_usd", "ai_assisted_minutes", "ai_assisted_cost_usd", "measurement_method"],
+  "additionalProperties": false,
+  "properties": {
+    "tenant_id": {"type": "string"},
+    "project_id": {"type": "string"},
+    "legacy_process": {"type": "string"},
+    "baseline_minutes": {"type": "number", "minimum": 0},
+    "baseline_cost_usd": {"type": "number", "minimum": 0},
+    "baseline_headcount": {"type": "number", "minimum": 0},
+    "ai_assisted_minutes": {"type": "number", "minimum": 0},
+    "ai_assisted_cost_usd": {"type": "number", "minimum": 0},
+    "ai_assisted_headcount": {"type": "number", "minimum": 0},
+    "quality_change": {"type": "string"},
+    "outcome": {"type": "string"},
+    "measurement_method": {"type": "string", "minLength": 1, "description": "Required. A saved-hours number without a stated method is a marketing claim, not a measurement."}
+  }
+}

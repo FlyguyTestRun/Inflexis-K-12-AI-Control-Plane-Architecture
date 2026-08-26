@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/audit-event.schema.json",
+  "title": "Audit event",
+  "description": "One immutable audit record. Audit records carry identifiers, hashes, and decisions -- never retrieved document text, which would create a second and usually less protected copy of confidential content.",
+  "type": "object",
+  "required": ["event_id", "timestamp", "event_type", "tenant_id", "principal_id", "action", "outcome", "severity"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {"type": "string", "format": "uuid"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "event_type": {"enum": ["authz.decision", "retrieval", "retrieval.filter_violation", "generation", "refusal", "tool.invocation", "tool.denied", "human.approval", "ingestion", "governance.change", "policy.exception", "incident"]},
+    "severity": {"enum": ["info", "notice", "warning", "security", "critical"]},
+    "tenant_id": {"type": "string", "minLength": 1},
+    "principal_id": {"type": "string", "minLength": 1},
+    "ai_system_id": {"type": ["string", "null"]},
+    "use_case_id": {"type": ["string", "null"]},
+    "action": {"type": "string"},
+    "outcome": {"type": "string"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "description": "Chunk ids and content hashes only."},
+    "model_id": {"type": ["string", "null"]},
+    "input_tokens": {"type": "integer", "minimum": 0},
+    "output_tokens": {"type": "integer", "minimum": 0},
+    "cost_usd": {"type": "number", "minimum": 0},
+    "latency_ms": {"type": "integer", "minimum": 0},
+    "detail": {"type": "object"}
+  }
+}

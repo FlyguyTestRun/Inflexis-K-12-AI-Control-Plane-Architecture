@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/document.schema.json",
+  "title": "Document",
+  "description": "A source document in the district knowledge plane. Every field required here exists to answer one of four questions before content reaches a model: whose is it, who may see it, should it be believed, and where did it come from.",
+  "type": "object",
+  "required": ["tenant_id", "district_id", "document_id", "title", "document_type", "trust_domain", "data_classification", "authority_level", "acl", "provenance", "status", "version"],
+  "additionalProperties": false,
+  "properties": {
+    "tenant_id": {"type": "string", "minLength": 1, "description": "Hard isolation boundary. Applied as a mandatory predicate on every query."},
+    "district_id": {"type": "string", "minLength": 1},
+    "campus_id": {"type": ["string", "null"]},
+    "department_id": {"type": ["string", "null"]},
+    "document_id": {"type": "string", "minLength": 1},
+    "parent_document_id": {"type": ["string", "null"]},
+    "title": {"type": "string"},
+    "document_type": {"type": "string", "examples": ["board_policy", "administrative_regulation", "handbook", "sop", "memo", "campus_doc", "hr_record", "student_record", "state_law_summary"]},
+    "source_system": {"type": "string"},
+    "source_uri": {"type": "string"},
+    "created_at": {"type": ["string", "null"], "format": "date-time"},
+    "modified_at": {"type": ["string", "null"], "format": "date-time"},
+    "effective_date": {"type": ["string", "null"], "format": "date"},
+    "expiration_date": {"type": ["string", "null"], "format": "date"},
+    "version": {"type": "string"},
+    "status": {"enum": ["draft", "active", "superseded", "expired", "archived", "revoked"]},
+    "authority_level": {"type": "integer", "minimum": 1, "maximum": 10, "description": "1 = Texas law, 2 = board policy, 3 = administrative regulation, 4 = district procedure, 5 = district handbook, 6 = department, 7 = campus, 8 = approved internal, 9 = approved external, 10 = public web. Lower is more authoritative."},
+    "trust_domain": {"enum": ["A_public", "B_district_internal", "C_personnel_hr", "D_student_confidential", "E_highly_sensitive_sped", "F_legal_privileged", "G_security_credentials"]},
+    "data_classification": {"enum": ["public", "internal", "confidential", "restricted"]},
+    "security_labels": {"type": "array", "items": {"type": "string"}},
+    "acl": {"$ref": "#/$defs/acl"},
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "acl": {
+      "type": "object",
+      "description": "Fail-closed. An empty allowed_roles with an empty allowed_subjects means nobody can read the document; ingestion rejects such content rather than indexing it.",
+      "required": ["allowed_roles"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed_roles": {"type": "array", "items": {"type": "string"}},
+        "required_permissions": {"type": "array", "items": {"type": "string"}},
+        "allowed_subjects": {"type": "array", "items": {"type": "string"}},
+        "attribute_match": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_system", "source_uri", "content_hash"],
+      "additionalProperties": false,
+      "properties": {
+        "source_system": {"type": "string"},
+        "source_uri": {"type": "string"},
+        "content_hash": {"type": "string", "description": "SHA-256 of the extracted text. Used for citation integrity and to detect corpus tampering."},
+        "page_number": {"type": ["integer", "null"], "minimum": 1},
+        "section": {"type": ["string", "null"]},
+        "table_id": {"type": ["string", "null"]},
+        "image_id": {"type": ["string", "null"]},
+        "extraction_method": {"enum": ["text", "ocr", "vision", "table_parser"], "description": "Set to ocr or vision when content was inferred rather than read from a text layer, so downstream consumers can weight and label it accordingly."}
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "District AI awareness and cybersecurity training program",
+  "version": "2026-08-26",
+  "implements_requirement": "TX-HB3512-AI-TRAINING",
+  "note": "Course identifiers below are placeholders. A district substitutes the DIR-certified program identifiers current at the time of assignment; see the DIR certification criteria referenced in docs/governance/source-registry.md.",
+  "courses": [
+    {
+      "training_id": "AI-AWARE-101",
+      "title": "AI awareness for district staff",
+      "audience_roles": ["teacher", "counselor", "principal", "hr", "it_admin", "superintendent"],
+      "cadence_months": 12,
+      "topics": [
+        "what generative AI is and how it fails",
+        "confabulation and why citations matter",
+        "what must never be entered into an AI tool",
+        "student data and FERPA in an AI context",
+        "when a human must make the decision"
+      ]
+    },
+    {
+      "training_id": "AI-CYBER-201",
+      "title": "AI and cybersecurity for technology staff",
+      "audience_roles": ["it_admin"],
+      "cadence_months": 12,
+      "topics": [
+        "prompt injection and indirect injection",
+        "data exfiltration through AI tooling",
+        "vendor and model supply chain review",
+        "incident response for AI systems"
+      ]
+    },
+    {
+      "training_id": "AI-GOV-301",
+      "title": "AI governance for risk owners",
+      "audience_roles": ["ai_risk_officer", "superintendent"],
+      "cadence_months": 12,
+      "topics": [
+        "AI inventory and use-case registration",
+        "risk classification and heightened scrutiny",
+        "impact assessment",
+        "evidence and audit expectations"
+      ]
+    }
+  ],
+  "completion_targets": {
+    "all_staff_percent": 100,
+    "grace_period_days": 30,
+    "escalation": "Incomplete after grace period is reported to the campus principal and the AI Risk Officer."
+  }
+}

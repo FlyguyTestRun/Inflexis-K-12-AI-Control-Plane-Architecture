@@ -1,0 +1,38 @@
+{
+  "policy_id": "AUP-AI-001",
+  "title": "District AI Acceptable Use Policy (template)",
+  "version": "1.0.0",
+  "status": "template",
+  "adopted_by": null,
+  "derived_from": "Texas DIR AI Acceptable Use Policy (see governance/texas/applicability-matrix.json TX-DIR-AUP)",
+  "notes": "Template only. A district adopts, edits, and versions this; the adopted version id is bound to each AI system record through AISystemRecord.policy_version.",
+  "permitted_uses": [
+    "Locating and summarising approved district policy, regulation, and procedure",
+    "Drafting routine administrative communication for human review before sending",
+    "Answering operational questions from approved district documentation",
+    "Assisting staff with IT self-service and documented troubleshooting steps"
+  ],
+  "prohibited_uses": [
+    "Making or materially influencing a student discipline decision without human review",
+    "Making or materially influencing a special education eligibility or placement decision",
+    "Making or materially influencing an admission, placement, hiring, or employment decision",
+    "Generating a student or staff risk score used to allocate services or scrutiny",
+    "Entering student personally identifiable information into an unapproved external AI tool",
+    "Using AI output as the sole basis for any consequential decision about a person"
+  ],
+  "data_handling": {
+    "prohibited_inputs": [
+      "student education records in unapproved tools",
+      "personnel records in unapproved tools",
+      "credentials or security configuration",
+      "legally privileged material"
+    ],
+    "approved_model_requirement": "Models must be registered with approved_trust_domains covering the data they will receive, and must not permit vendor training on submitted data above PUBLIC classification."
+  },
+  "human_review": {
+    "required_for": ["any consequential decision about a student or employee"],
+    "reviewer_roles": ["principal", "counselor", "hr", "superintendent"]
+  },
+  "acknowledgement_required": true,
+  "review_cadence_months": 12
+}

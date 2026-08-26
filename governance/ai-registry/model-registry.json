@@ -1,0 +1,60 @@
+{
+  "note": "Reference model registry. Costs and context sizes are placeholders to be set from the vendor's current published figures at deployment time. approved_trust_domains is the governance-critical field: it constrains where content may be SENT, independently of what a user is entitled to READ.",
+  "models": [
+    {
+      "model_id": "llm-primary",
+      "kind": "llm",
+      "provider": "azure-openai",
+      "lifecycle": "ga",
+      "input_cost_per_mtok": 0.0,
+      "output_cost_per_mtok": 0.0,
+      "max_context_tokens": 128000,
+      "approved_trust_domains": ["A_public", "B_district_internal"],
+      "vendor_may_train_on_data": false,
+      "data_residency": "us",
+      "notes": "Default generation model for the district knowledge assistant. Not approved for personnel or student-confidential content; a use case needing those must route to llm-sensitive after its own review."
+    },
+    {
+      "model_id": "llm-sensitive",
+      "kind": "llm",
+      "provider": "azure-openai",
+      "lifecycle": "ga",
+      "input_cost_per_mtok": 0.0,
+      "output_cost_per_mtok": 0.0,
+      "max_context_tokens": 128000,
+      "approved_trust_domains": ["A_public", "B_district_internal", "C_personnel_hr", "D_student_confidential"],
+      "vendor_may_train_on_data": false,
+      "data_residency": "us",
+      "notes": "Requires a signed data protection addendum and confirmed no-training terms before a district enables it."
+    },
+    {
+      "model_id": "embedding-primary",
+      "kind": "embedding",
+      "provider": "azure-openai",
+      "lifecycle": "ga",
+      "max_context_tokens": 8191,
+      "approved_trust_domains": ["A_public", "B_district_internal", "C_personnel_hr", "D_student_confidential"],
+      "vendor_may_train_on_data": false,
+      "data_residency": "us"
+    },
+    {
+      "model_id": "reranker-primary",
+      "kind": "reranker",
+      "provider": "azure-ai-search",
+      "lifecycle": "ga",
+      "approved_trust_domains": ["A_public", "B_district_internal", "C_personnel_hr", "D_student_confidential"],
+      "vendor_may_train_on_data": false,
+      "data_residency": "us"
+    },
+    {
+      "model_id": "vlm-preview",
+      "kind": "vlm",
+      "provider": "azure-openai",
+      "lifecycle": "preview",
+      "approved_trust_domains": ["A_public"],
+      "vendor_may_train_on_data": false,
+      "data_residency": "us",
+      "notes": "Preview lifecycle. Per ADR-006 this model cannot be selected by default routing; a caller must pass allow_preview explicitly and the use case must record the preview dependency."
+    }
+  ]
+}

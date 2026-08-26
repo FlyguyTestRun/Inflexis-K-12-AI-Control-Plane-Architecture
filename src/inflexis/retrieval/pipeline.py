@@ -15,7 +15,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Sequence
+from typing import Callable, Sequence
 
 from ..contracts.audit import AuditEvent, AuditEventType, AuditSink, Severity
 from ..contracts.authz import AuthorizedQuery, enforce_filter
@@ -72,6 +72,21 @@ class HybridRetrievalPipeline:
             raise ValueError("a retrieval pipeline needs at least one retriever")
         self._retrievers = list(retrievers)
         self._reranker = reranker
+        # A reranker that weights coverage by term informativeness needs corpus
+        # statistics. Wiring them here means a caller cannot forget to, which
+        # would silently degrade the relevance gate to unweighted overlap.
+        if getattr(reranker, "statistics", "unset") is None:
+            index = next(
+                (getattr(r, "_index", None) for r in self._retrievers
+                 if getattr(r, "_index", None) is not None),
+                None,
+            )
+            if index is not None and hasattr(index, "statistics"):
+                self._pending_statistics = index
+            else:
+                self._pending_statistics = None
+        else:
+            self._pending_statistics = None
         self._fusion = fusion or ReciprocalRankFusion()
         # The relevance floor is a property of the reranker's score scale, so
         # take it from the reranker rather than assuming a platform-wide value.
@@ -87,6 +102,65 @@ class HybridRetrievalPipeline:
         self.final_n = final_n
         self.strategy = strategy
 
+    def answer(
+        self,
+        query: AuthorizedQuery,
+        *,
+        reauthorize: Callable[[str], AuthorizedQuery] | None = None,
+        rewrite: Callable[[str, int], str] | None = None,
+        as_of: date | None = None,
+        ai_system_id: str | None = None,
+    ) -> GroundedContext:
+        """Run the corrective loop to a terminal verdict.
+
+        This is the entry point an orchestrator should call. :meth:`run`
+        executes exactly one pass; ``answer`` keeps going while the corrective
+        checker asks for a rewrite and the caller has supplied the means to
+        perform one.
+
+        Rewriting goes back through ``reauthorize`` rather than reusing the
+        existing filter. Our policy engine computes the filter independently of
+        query text, but that is a property of *this* engine, not a guarantee of
+        the :class:`~inflexis.contracts.authz.PolicyDecisionPoint` protocol --
+        another implementation might legitimately deny particular queries. Round
+        tripping through the decision point keeps the loop correct for any PDP.
+
+        With no ``rewrite`` supplied the loop cannot rewrite, so it re-asks the
+        checker with the attempt budget exhausted. That converts a provisional
+        "try again" into the terminal answer -- refuse or escalate -- instead of
+        leaving the caller holding a non-actionable verdict.
+        """
+        attempt = 0
+        current = query
+        while True:
+            context = self.run(
+                current, attempt=attempt, as_of=as_of, ai_system_id=ai_system_id
+            )
+            action = context.verdict.action
+            retryable = action in (
+                CorrectiveAction.REWRITE_QUERY,
+                CorrectiveAction.BROADEN_SOURCES,
+            )
+            if not retryable:
+                return context
+
+            can_retry = (
+                rewrite is not None
+                and reauthorize is not None
+                and attempt < self._corrective.max_rewrites
+            )
+            if not can_retry:
+                # Exhaust the budget so the checker yields its terminal action.
+                return self.run(
+                    current,
+                    attempt=self._corrective.max_rewrites,
+                    as_of=as_of,
+                    ai_system_id=ai_system_id,
+                )
+
+            attempt += 1
+            current = reauthorize(rewrite(current.text, attempt))
+
     def run(
         self,
         query: AuthorizedQuery,
@@ -95,7 +169,16 @@ class HybridRetrievalPipeline:
         as_of: date | None = None,
         ai_system_id: str | None = None,
     ) -> GroundedContext:
+        """Execute a single retrieval pass. See :meth:`answer` for the loop."""
         started = time.perf_counter()
+
+        if self._pending_statistics is not None:
+            # Statistics are tenant-scoped, so they are bound on first use when
+            # the tenant is known rather than at construction time.
+            self._reranker.statistics = self._pending_statistics.statistics(
+                query.filter.tenant_id
+            )
+            self._pending_statistics = None
 
         result_sets: list[RetrievalResult] = [
             retriever.retrieve(query) for retriever in self._retrievers

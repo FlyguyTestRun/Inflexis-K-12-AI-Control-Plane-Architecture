@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/chunk.schema.json",
+  "title": "Chunk",
+  "description": "The unit of retrieval. A chunk inherits its security posture from its parent document and may never widen it.",
+  "type": "object",
+  "required": ["chunk_id", "document_id", "tenant_id", "district_id", "text", "trust_domain", "data_classification", "authority_level", "acl", "provenance", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "chunk_id": {"type": "string", "minLength": 1},
+    "document_id": {"type": "string", "minLength": 1},
+    "tenant_id": {"type": "string", "minLength": 1},
+    "district_id": {"type": "string", "minLength": 1},
+    "campus_id": {"type": ["string", "null"]},
+    "department_id": {"type": ["string", "null"]},
+    "title": {"type": "string"},
+    "text": {"type": "string", "minLength": 1},
+    "ordinal": {"type": "integer", "minimum": 0},
+    "trust_domain": {"enum": ["A_public", "B_district_internal", "C_personnel_hr", "D_student_confidential", "E_highly_sensitive_sped", "F_legal_privileged", "G_security_credentials"]},
+    "data_classification": {"enum": ["public", "internal", "confidential", "restricted"]},
+    "authority_level": {"type": "integer", "minimum": 1, "maximum": 10},
+    "status": {"enum": ["draft", "active", "superseded", "expired", "archived", "revoked"]},
+    "version": {"type": "string"},
+    "effective_date": {"type": ["string", "null"], "format": "date"},
+    "expiration_date": {"type": ["string", "null"], "format": "date"},
+    "acl": {"$ref": "document.schema.json#/$defs/acl"},
+    "provenance": {"$ref": "document.schema.json#/$defs/provenance"}
+  }
+}

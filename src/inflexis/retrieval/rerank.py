@@ -22,6 +22,7 @@ from typing import Sequence
 from ..contracts.document import ScoredChunk
 from ..contracts.model import RerankerProvider
 from .bm25 import tokenize
+from .index import CorpusStatistics
 
 
 class ProviderReranker:
@@ -85,10 +86,16 @@ class HeuristicReranker:
     def __init__(
         self, *, coverage_weight: float = 1.0, authority_weight: float = 0.35,
         freshness_weight: float = 0.15,
+        statistics: "CorpusStatistics | None" = None,
     ) -> None:
         self.coverage_weight = coverage_weight
         self.authority_weight = authority_weight
         self.freshness_weight = freshness_weight
+        # Term statistics make coverage informativeness-weighted. Without them
+        # every query term counts equally, so a question whose only matching
+        # terms are "the", "district", and "policy" scores as a confident hit
+        # against any district document. See CorpusStatistics.weight.
+        self.statistics = statistics
 
     def rerank(
         self, query: str, candidates: Sequence[ScoredChunk], *, top_n: int
@@ -101,7 +108,7 @@ class HeuristicReranker:
         for cand in candidates:
             chunk = cand.chunk
             terms = set(tokenize(chunk.text + " " + chunk.title))
-            coverage = len(q_terms & terms) / len(q_terms)
+            coverage = self._coverage(q_terms, terms)
             # AuthorityLevel is 1 (highest) .. 10 (lowest); map to 1.0 .. 0.0.
             authority = (10 - chunk.authority_level.value) / 9
             freshness = 1.0 if chunk.is_current(today) else 0.0
@@ -129,3 +136,19 @@ class HeuristicReranker:
             )
             for i, (c, s) in enumerate(rescored[:top_n])
         ]
+
+    def _coverage(self, q_terms: set[str], doc_terms: set[str]) -> float:
+        """Fraction of the query's *information* the document covers.
+
+        With statistics available this is IDF-weighted, so matching a rare term
+        such as a policy code counts far more than matching a filler word. With
+        no statistics it degrades to plain term overlap, which is why the
+        pipeline supplies statistics automatically.
+        """
+        matched = q_terms & doc_terms
+        if self.statistics is None:
+            return len(matched) / len(q_terms)
+        total = sum(self.statistics.weight(t) for t in q_terms)
+        if total == 0:
+            return 0.0
+        return sum(self.statistics.weight(t) for t in matched) / total
