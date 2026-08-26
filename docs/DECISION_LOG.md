@@ -239,3 +239,25 @@ itself flagged by this repository's own hygiene check as control erosion.
 serialization without the mixed-inheritance subtleties. Mechanical change, no
 behavioural difference in this codebase; recorded because it touched every
 contract module.
+
+---
+
+## D-015 — Python package layout instead of the handoff's flat directories
+
+**Date:** 2026-08-26 · **Status:** accepted
+
+The handoff's §33 proposes top-level `services/` and `retrieval/` directories.
+Implementation uses a single installable package at `src/inflexis/` with
+`retrieval/`, `authz/`, `governance/`, `models/`, `tools/`, `audit/`, and
+`evaluation/` as submodules.
+
+**Why.** The planes need to import each other's contracts. Flat sibling
+directories force either path manipulation or duplicated contract definitions,
+and duplicated contracts is how a chunk's ACL semantics quietly diverge between
+two components. A package also makes the "only `inflexis.models` may import a
+vendor SDK" rule checkable, and gives `pip install -e .` for CI.
+
+District-facing *data* — matrices, policies, registries, gold sets — stays at
+top-level `governance/`, matching the handoff, because a district
+administrator editing an applicability matrix should not have to navigate into
+a source tree.

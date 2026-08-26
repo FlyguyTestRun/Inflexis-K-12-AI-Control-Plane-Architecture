@@ -54,3 +54,5 @@ jobs:
           python-version: "3.11"
       - name: Validate JSON documents parse
         run: python scripts/validate_json.py
+      - name: Check internal documentation links
+        run: python scripts/check_doc_links.py
