@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inflexis-k12-control-plane"
+version = "0.1.0"
+description = "Governed AI control plane for Texas K-12 school districts"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "UNLICENSED" }
+# The core library has no runtime dependencies on purpose. Vendor SDKs are
+# confined to optional adapter extras so that the contracts, governance, and
+# authorization layers stay portable and testable without cloud access
+# (see ADR-005).
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+filterwarnings = ["error"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = ["S101"]  # assert is expected in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S", "E501"]

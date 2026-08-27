@@ -1,0 +1,9 @@
+{
+  "policy_id": "DISC-001",
+  "title": "AI interaction disclosure policy",
+  "version": "1.0.0",
+  "rule": "Any AI system whose audience includes students, parents, or the public must present a disclosure before the first interaction of a session.",
+  "default_disclosure_text": "You are interacting with an automated assistant. It answers from approved district documents and can be wrong. For decisions about a specific student or employee, contact the responsible district staff member.",
+  "enforcement": "A use case flagged public_facing cannot reach approval status APPROVED without a non-empty disclosure string.",
+  "applies_to_requirement": "TX-HB149-GOV-DISCLOSURE"
+}

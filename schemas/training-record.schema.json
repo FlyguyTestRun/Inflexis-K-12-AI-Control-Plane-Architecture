@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/training-record.schema.json",
+  "title": "Training record",
+  "description": "AI awareness / cybersecurity training evidence. Implements the control mapped to TX-HB3512-AI-TRAINING.",
+  "type": "object",
+  "required": ["tenant_id", "employee_id", "role", "training_id", "assigned_date", "completed"],
+  "additionalProperties": false,
+  "properties": {
+    "tenant_id": {"type": "string"},
+    "employee_id": {"type": "string", "description": "District employee identifier. Never a name or email in the evidence store."},
+    "role": {"type": "string"},
+    "training_id": {"type": "string"},
+    "assigned_date": {"type": "string", "format": "date"},
+    "completed": {"type": "boolean"},
+    "completion_date": {"type": ["string", "null"], "format": "date"},
+    "certification_id": {"type": "string"},
+    "expiration_date": {"type": ["string", "null"], "format": "date"},
+    "evidence_uri": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"completed": {"const": true}}, "required": ["completed"]},
+      "then": {"required": ["completion_date"], "properties": {"completion_date": {"type": "string"}}}
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "AI use-case risk classification rubric",
+  "version": "2026-08-26",
+  "method": "A use case takes the HIGHEST risk class triggered by any dimension. Risk is never averaged down: a low-impact use case that touches student records is not 'medium on average', it is a student-records use case.",
+  "dimensions": [
+    {
+      "dimension": "decision_impact",
+      "levels": [
+        {"value": "informational", "risk_class": "minimal", "description": "Returns information; a human decides everything."},
+        {"value": "advisory", "risk_class": "limited", "description": "Suggests an action a human performs."},
+        {"value": "influences_consequential", "risk_class": "heightened_scrutiny", "description": "Materially influences a decision about a person's education, services, or employment."},
+        {"value": "autonomous_consequential", "risk_class": "prohibited", "description": "Decides a consequential matter without human review. Out of scope for this platform."}
+      ]
+    },
+    {
+      "dimension": "data_sensitivity",
+      "levels": [
+        {"value": "public_only", "risk_class": "minimal"},
+        {"value": "district_internal", "risk_class": "limited"},
+        {"value": "personnel", "risk_class": "elevated"},
+        {"value": "student_confidential", "risk_class": "elevated"},
+        {"value": "special_education_or_legal", "risk_class": "heightened_scrutiny"}
+      ]
+    },
+    {
+      "dimension": "audience",
+      "levels": [
+        {"value": "staff_only", "risk_class": "minimal"},
+        {"value": "students", "risk_class": "elevated", "description": "Minors. Raises both safety and disclosure obligations."},
+        {"value": "public", "risk_class": "limited"}
+      ]
+    },
+    {
+      "dimension": "autonomy",
+      "levels": [
+        {"value": "read_only", "risk_class": "minimal"},
+        {"value": "writes_with_approval", "risk_class": "elevated"},
+        {"value": "writes_autonomously", "risk_class": "heightened_scrutiny"}
+      ]
+    }
+  ],
+  "controls_by_class": {
+    "minimal": ["registration", "audit", "evaluation baseline"],
+    "limited": ["registration", "audit", "disclosure", "evaluation baseline"],
+    "elevated": ["registration", "audit", "named human oversight", "gold set including leakage cases", "annual review"],
+    "heightened_scrutiny": ["all elevated controls", "documented human oversight mechanism", "impact assessment", "AI Risk Officer approval", "bias evaluation", "semi-annual review"],
+    "prohibited": ["registration refused", "escalation to AI Risk Officer and counsel"]
+  }
+}

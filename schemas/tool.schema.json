@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/tool.schema.json",
+  "title": "Tool descriptor",
+  "description": "The governance record for a tool. A tool that cannot fill this in is not ready to be exposed to an agent.",
+  "type": "object",
+  "required": ["name", "description", "risk_level", "read_only", "required_roles", "required_permissions", "tenant_scope", "credential_scope", "requires_human_approval", "audit_required", "reversible", "rollback_supported"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "description": {"type": "string", "minLength": 1},
+    "risk_level": {"enum": ["low", "medium", "high", "prohibited"]},
+    "read_only": {"type": "boolean"},
+    "required_roles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "description": "At least one. A tool callable by any role is not a governed tool."},
+    "required_permissions": {"type": "array", "items": {"type": "string"}},
+    "tenant_scope": {"enum": ["single", "none"], "description": "Cross-tenant tools are not permitted."},
+    "data_domains": {"type": "array", "items": {"type": "string"}},
+    "credential_scope": {"type": "string"},
+    "requires_human_approval": {"type": "boolean"},
+    "audit_required": {"const": true, "description": "Audit is not optional."},
+    "reversible": {"type": "boolean"},
+    "rollback_supported": {"type": "boolean"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"read_only": {"const": false}, "risk_level": {"enum": ["high", "prohibited"]}}, "required": ["read_only", "risk_level"]},
+      "then": {"properties": {"requires_human_approval": {"const": true}}}
+    }
+  ]
+}

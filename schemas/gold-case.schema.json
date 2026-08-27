@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/gold-case.schema.json",
+  "title": "Gold set evaluation case",
+  "description": "One district evaluation case. A gold set without refusal cases and forbidden-source cases measures only whether the system is helpful, not whether it is safe.",
+  "type": "object",
+  "required": ["case_id", "query", "as_role", "expected_behaviour"],
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {"type": "string"},
+    "tenant_id": {"type": "string"},
+    "query": {"type": "string", "minLength": 1},
+    "as_role": {"type": "string"},
+    "expected_behaviour": {"enum": ["answer", "refuse", "clarify", "escalate"]},
+    "expected_sources": {"type": "array", "items": {"type": "string"}},
+    "forbidden_sources": {"type": "array", "items": {"type": "string"}, "description": "Chunk ids that must NOT appear. This is the leakage half of the gold set."},
+    "expected_answer_contains": {"type": "array", "items": {"type": "string"}},
+    "authority_requirement": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
+    "freshness_required": {"type": "boolean"},
+    "citation_required": {"type": "boolean"},
+    "risk_level": {"enum": ["low", "medium", "high"]},
+    "notes": {"type": "string"}
+  }
+}

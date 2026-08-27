@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inflexis.tech/schemas/model.schema.json",
+  "title": "Model registry entry",
+  "type": "object",
+  "required": ["model_id", "kind", "provider", "lifecycle", "approved_trust_domains", "vendor_may_train_on_data"],
+  "additionalProperties": false,
+  "properties": {
+    "model_id": {"type": "string"},
+    "kind": {"enum": ["llm", "vlm", "embedding", "reranker"]},
+    "provider": {"type": "string"},
+    "lifecycle": {"enum": ["ga", "preview", "deprecated", "retired"], "description": "Preview models must not become silent production dependencies -- see ADR-006."},
+    "input_cost_per_mtok": {"type": "number", "minimum": 0},
+    "output_cost_per_mtok": {"type": "number", "minimum": 0},
+    "max_context_tokens": {"type": "integer", "minimum": 0},
+    "approved_trust_domains": {"type": "array", "items": {"type": "string"}},
+    "vendor_may_train_on_data": {"type": "boolean"},
+    "data_residency": {"type": "string"},
+    "notes": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"vendor_may_train_on_data": {"const": true}}, "required": ["vendor_may_train_on_data"]},
+      "then": {"properties": {"approved_trust_domains": {"maxItems": 1, "items": {"const": "A_public"}}}}
+    }
+  ]
+}
